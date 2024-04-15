@@ -1,0 +1,160 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "nodes": [
+    {
+      "id": "ca98730e-a40f-4601-98cc-b5a57429596d",
+      "type": "inputNode",
+      "position": {
+        "x": -95,
+        "y": 340
+      },
+      "name": "Request"
+    },
+    {
+      "id": "c5e747fe-b74b-4b74-9fd0-bfd7d67007c3",
+      "type": "outputNode",
+      "position": {
+        "x": 1055,
+        "y": 405
+      },
+      "name": "Response"
+    },
+    {
+      "id": "359173d8-0068-45f8-bb71-8240ad73201d",
+      "type": "decisionTableNode",
+      "position": {
+        "x": 765,
+        "y": 405
+      },
+      "name": "比较",
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "HVo_JpALi8",
+            "type": "expression",
+            "field": "weight",
+            "name": "Cart Weight (Kg)"
+          },
+          {
+            "id": "HW6mSVfLbs",
+            "type": "expression",
+            "field": "country",
+            "name": "Customer Country"
+          }
+        ],
+        "outputs": [
+          {
+            "field": "fee",
+            "id": "3EGDrV0ssV",
+            "name": "Shipping Fee",
+            "type": "expression"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "qMpJEvcau6",
+            "_description": "如果重量超过 40 公斤且国家为美国，费用为 40",
+            "HVo_JpALi8": "> 40",
+            "HW6mSVfLbs": "\"US\"",
+            "3EGDrV0ssV": "40"
+          },
+          {
+            "_id": "KC6KqcWiOX",
+            "_description": "如果重量超过40公斤并且任何其他国家，费用为 50",
+            "HVo_JpALi8": "> 40",
+            "HW6mSVfLbs": "",
+            "3EGDrV0ssV": "50"
+          },
+          {
+            "_id": "k-zEFSTe7b",
+            "_description": "如果重量在 20 至 40 公斤之间且美国国家/地区，费用为 30",
+            "HVo_JpALi8": "[20..40]",
+            "HW6mSVfLbs": "\"US\"",
+            "3EGDrV0ssV": "30"
+          },
+          {
+            "_id": "c_8VkmGZ_C",
+            "_description": "如果重量在 20 至 40 公斤之间以及任何其他国家，费用为32",
+            "HVo_JpALi8": "[20..40]",
+            "HW6mSVfLbs": "",
+            "3EGDrV0ssV": "32"
+          },
+          {
+            "_id": "e_MyQeTS3V",
+            "_description": "如果重量低于 20 公斤且美国国家/地区，费用为 25",
+            "HVo_JpALi8": "< 20",
+            "HW6mSVfLbs": "\"US\"",
+            "3EGDrV0ssV": "25"
+          },
+          {
+            "_id": "_iU8FNLxHb",
+            "_description": "如果重量低于20公斤，费用为 30",
+            "HVo_JpALi8": "< 20",
+            "HW6mSVfLbs": "",
+            "3EGDrV0ssV": "30"
+          }
+        ]
+      }
+    },
+    {
+      "name": "乘二",
+      "content": "/**\n * @param input\n * @param {{\n *  dayjs: import('dayjs')\n *  Big: import('big.js').BigConstructor\n * }} helpers\n */\nconst handler = (input) => {\n  if (typeof input.weight === 'number') {\n    input.weight *= 2\n  }\n\n  return input;\n}",
+      "id": "9da72468-f61d-47e9-ab12-ade26b1f4ae5",
+      "position": {
+        "x": 480,
+        "y": 405
+      },
+      "type": "functionNode"
+    },
+    {
+      "name": "简化",
+      "content": {
+        "expressions": [
+          {
+            "id": "98afc63c-b8f1-4c3f-8380-a6a88cf63aa1",
+            "key": "weight",
+            "value": "cart.weight"
+          },
+          {
+            "id": "d8674175-bdc2-4a3d-81c9-a4af2d4bbb71",
+            "key": "country",
+            "value": "customer.country"
+          }
+        ]
+      },
+      "id": "25b0e4f8-763d-4df9-83c8-08208f6283f0",
+      "position": {
+        "x": 200,
+        "y": 405
+      },
+      "type": "expressionNode"
+    }
+  ],
+  "edges": [
+    {
+      "id": "1682c15b-28da-4586-8366-a7775c775b27",
+      "sourceId": "359173d8-0068-45f8-bb71-8240ad73201d",
+      "type": "edge",
+      "targetId": "c5e747fe-b74b-4b74-9fd0-bfd7d67007c3"
+    },
+    {
+      "id": "dae747b6-2507-4a36-85ec-74e26cf734eb",
+      "sourceId": "9da72468-f61d-47e9-ab12-ade26b1f4ae5",
+      "type": "edge",
+      "targetId": "359173d8-0068-45f8-bb71-8240ad73201d"
+    },
+    {
+      "id": "d5444002-b7c6-4af3-bba4-b0e774a44429",
+      "sourceId": "ca98730e-a40f-4601-98cc-b5a57429596d",
+      "type": "edge",
+      "targetId": "25b0e4f8-763d-4df9-83c8-08208f6283f0"
+    },
+    {
+      "id": "58ab0b23-0694-4451-8c78-efc4b67e4544",
+      "sourceId": "25b0e4f8-763d-4df9-83c8-08208f6283f0",
+      "type": "edge",
+      "targetId": "9da72468-f61d-47e9-ab12-ade26b1f4ae5"
+    }
+  ]
+}
